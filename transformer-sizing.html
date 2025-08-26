@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transformer Sizing Calculator</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #eef3f8;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: #0077cc;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      border-bottom: 3px solid #005fa3;
+    }
+
+    /* Container Card */
+    .container {
+      max-width: 550px;
+      margin: 40px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      text-align: center;
+      color: #222;
+      margin-bottom: 20px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+    .field label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #333;
+    }
+    .field input, .field select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #0077cc, #005fa3);
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #005fa3, #003d73);
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fff3cd;
+      border-left: 6px solid #ffc107;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #856404;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 25px;
+      text-decoration: none;
+      color: #0077cc;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">⚡ Electrical Tools Online</nav>
+
+  <div class="container">
+    <h1>🔋 Transformer Sizing Calculator</h1>
+
+    <div class="field">
+      <label>Total Connected Load (kW):</label>
+      <input type="number" id="kw" placeholder="e.g. 500">
+    </div>
+
+    <div class="field">
+      <label>Power Factor (0–1):</label>
+      <input type="number" id="pf" value="0.8" step="0.01">
+    </div>
+
+    <div class="field">
+      <label>Safety Factor (%):</label>
+      <input type="number" id="sf" value="25">
+    </div>
+
+    <button onclick="calculateTransformer()">Calculate Transformer Size</button>
+
+    <div class="result" id="result"></div>
+
+    <a href="index.html" class="back-link">⬅ Back to Home</a>
+  </div>
+
+  <script>
+    function calculateTransformer() {
+      let kw = parseFloat(document.getElementById("kw").value);
+      let pf = parseFloat(document.getElementById("pf").value);
+      let sf = parseFloat(document.getElementById("sf").value);
+
+      if (isNaN(kw) || isNaN(pf) || isNaN(sf) || pf <= 0 || pf > 1) {
+        document.getElementById("result").innerHTML = "⚠ Please enter valid values.";
+        return;
+      }
+
+      // Convert kW to kVA
+      let kva = kw / pf;
+
+      // Apply safety factor
+      kva = kva * (1 + sf / 100);
+
+      // Round to nearest standard transformer rating
+      let standardRatings = [100, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500];
+      let recommended = standardRatings.find(size => size >= kva);
+
+      document.getElementById("result").innerHTML =
+        `Required Transformer ≈ ${kva.toFixed(1)} kVA <br>
+         Recommended Standard Rating = ${recommended ? recommended + " kVA" : "Above 2500 kVA"}`;
+    }
+  </script>
+</body>
+</html>
