@@ -3,175 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cable Size Estimator</title>
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <title>Wire Size Calculator | Electrical Tools</title>
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: #eef3f8;
+      background: #f4f7fb;
+      color: #333;
     }
-
-    /* Navbar */
-    .navbar {
-      background: #0077cc;
+    header {
+      background: #1a237e;
       color: white;
-      padding: 15px;
+      padding: 20px;
       text-align: center;
-      font-size: 20px;
+      font-size: 1.5rem;
       font-weight: bold;
-      border-bottom: 3px solid #005fa3;
     }
-
-    /* Container Card */
     .container {
-      max-width: 550px;
+      max-width: 700px;
       margin: 40px auto;
       background: white;
       padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
     }
-
-    h1 {
-      text-align: center;
-      color: #222;
-      margin-bottom: 20px;
-    }
-
-    .field {
-      margin-bottom: 18px;
-    }
-    .field label {
+    label {
       display: block;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: #333;
+      margin: 12px 0 5px;
+      font-weight: bold;
     }
-    .field input, .field select {
+    input, select {
       width: 100%;
       padding: 10px;
+      margin-bottom: 15px;
       border: 1px solid #ccc;
       border-radius: 6px;
-      font-size: 15px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
       font-size: 16px;
+    }
+    button {
+      background: #3949ab;
+      color: white;
+      padding: 12px;
       border: none;
       border-radius: 8px;
-      background: linear-gradient(90deg, #0077cc, #005fa3);
-      color: white;
+      font-size: 18px;
       cursor: pointer;
-      font-weight: 600;
-      transition: 0.3s;
+      width: 100%;
     }
     button:hover {
-      background: linear-gradient(90deg, #005fa3, #003d73);
+      background: #5c6bc0;
     }
-
-    .result {
+    #result {
       margin-top: 20px;
-      padding: 15px;
-      background: #e7f6ec;
-      border-left: 6px solid #28a745;
-      border-radius: 8px;
       font-size: 18px;
-      font-weight: 500;
-      color: #1d5c2e;
-    }
-
-    .back-link {
-      display: block;
+      font-weight: bold;
+      color: #1a237e;
       text-align: center;
-      margin-top: 25px;
-      text-decoration: none;
-      color: #0077cc;
-      font-weight: 600;
+    }
+    footer {
+      background: #1a237e;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
-
-  <nav class="navbar">⚡ Electrical Tools Online</nav>
+  <header>⚡ Wire Size Calculator</header>
 
   <div class="container">
-    <h1>🔌 Cable Size Estimator</h1>
+    <label for="current">Load Current (A):</label>
+    <input type="number" id="current" placeholder="Enter current in amps">
 
-    <div class="field">
-      <label>Load Current (A):</label>
-      <input type="number" id="current" placeholder="e.g. 120">
-    </div>
+    <label for="length">Cable Length (m):</label>
+    <input type="number" id="length" placeholder="Enter cable length in meters">
 
-    <div class="field">
-      <label>Cable Length (m):</label>
-      <input type="number" id="length" placeholder="e.g. 50">
-    </div>
+    <label for="voltage">System Voltage (V):</label>
+    <input type="number" id="voltage" placeholder="Enter voltage in volts">
 
-    <div class="field">
-      <label>Supply Voltage (V):</label>
-      <input type="number" id="voltage" value="400">
-    </div>
+    <label for="material">Conductor Material:</label>
+    <select id="material">
+      <option value="copper">Copper</option>
+      <option value="aluminum">Aluminum</option>
+    </select>
 
-    <div class="field">
-      <label>Allowed Voltage Drop (%):</label>
-      <input type="number" id="vd" value="3">
-    </div>
-
-    <div class="field">
-      <label>System Type:</label>
-      <select id="system">
-        <option value="single">Single Phase</option>
-        <option value="three">Three Phase</option>
-      </select>
-    </div>
-
-    <button onclick="estimateCable()">Estimate Cable Size</button>
-
-    <div class="result" id="result"></div>
-
-    <a href="index.html" class="back-link">⬅ Back to Home</a>
+    <button onclick="calculateSize()">Calculate Wire Size</button>
+    <div id="result"></div>
   </div>
 
-  <script>
-    function estimateCable() {
-      let current = parseFloat(document.getElementById("current").value);
-      let length = parseFloat(document.getElementById("length").value);
-      let voltage = parseFloat(document.getElementById("voltage").value);
-      let vdPercent = parseFloat(document.getElementById("vd").value);
-      let system = document.getElementById("system").value;
+  <footer>© 2025 Electrical Tools | Developed by Muhammad Fahid Khan</footer>
 
-      if (isNaN(current) || isNaN(length) || isNaN(voltage) || isNaN(vdPercent)) {
-        document.getElementById("result").innerHTML = "⚠ Please enter all values.";
+  <script>
+    function calculateSize() {
+      const current = parseFloat(document.getElementById('current').value);
+      const length = parseFloat(document.getElementById('length').value);
+      const voltage = parseFloat(document.getElementById('voltage').value);
+      const material = document.getElementById('material').value;
+
+      if (isNaN(current) || isNaN(length) || isNaN(voltage)) {
+        document.getElementById('result').innerText = "⚠️ Please enter valid numbers.";
         return;
       }
 
-      // resistivity of copper in ohm·mm²/m
-      const resistivity = 0.018;
+      // Assume base current capacity (ampacity)
+      let resistivity = material === "copper" ? 1.68e-8 : 2.82e-8; // ohm-m
+      let allowedDrop = 0.03 * voltage; // 3% voltage drop
+      let area = (2 * resistivity * length * current) / allowedDrop; // m²
+      let mm2 = area * 1e6; // convert to mm²
 
-      // Max voltage drop allowed
-      let vd = (vdPercent / 100) * voltage;
+      // Round to standard sizes
+      let standardSizes = [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 185, 240];
+      let finalSize = standardSizes.find(size => size >= mm2) || "Above 240 mm²";
 
-      // Formula: Vdrop = (2 * I * ρ * L) / A  (single phase)
-      // Formula: Vdrop = (√3 * I * ρ * L) / A (three phase)
-      let A;
-      if (system === "single") {
-        A = (2 * current * resistivity * length) / vd;
-      } else {
-        A = (1.732 * current * resistivity * length) / vd;
-      }
-
-      // Round up to nearest standard cable size (basic approximation)
-      let standardSizes = [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 185, 240, 300, 400];
-      let recommended = standardSizes.find(size => size >= A);
-
-      document.getElementById("result").innerHTML =
-        `Required Cable Area ≈ ${A.toFixed(2)} mm² <br>
-         Recommended Standard Cable Size = ${recommended ? recommended + " mm²" : "Above 400 mm²"}`;
+      document.getElementById('result').innerHTML =
+        `Recommended Cable Size: <b>${finalSize} mm²</b>`;
     }
   </script>
 </body>
