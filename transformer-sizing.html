@@ -3,103 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transformer Efficiency Calculator</title>
+  <title>Transformer Sizing Calculator | Electrical Tools</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f4f6f9;
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background: #f4f7fb;
+      color: #333;
+    }
+    header {
+      background: #1a237e;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
     }
     .container {
+      max-width: 700px;
+      margin: 40px auto;
       background: white;
       padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-      width: 380px;
-      text-align: center;
-    }
-    h2 {
-      margin-bottom: 20px;
-      color: #2c3e50;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
     }
     label {
       display: block;
       margin: 12px 0 5px;
       font-weight: bold;
-      text-align: left;
     }
     input {
       width: 100%;
       padding: 10px;
       margin-bottom: 15px;
       border: 1px solid #ccc;
-      border-radius: 8px;
+      border-radius: 6px;
+      font-size: 16px;
     }
     button {
-      background: #3498db;
+      background: #3949ab;
       color: white;
+      padding: 12px;
       border: none;
-      padding: 12px 18px;
       border-radius: 8px;
+      font-size: 18px;
       cursor: pointer;
-      font-size: 16px;
       width: 100%;
     }
     button:hover {
-      background: #2980b9;
+      background: #5c6bc0;
     }
     .result {
       margin-top: 20px;
       font-size: 18px;
       font-weight: bold;
-      color: #16a085;
+      color: #1a237e;
+      text-align: center;
     }
-    .back-link {
+    .back-home {
       display: inline-block;
       margin-top: 20px;
       text-decoration: none;
       color: #555;
+      text-align: center;
     }
-    .back-link:hover {
+    .back-home:hover {
       color: #000;
     }
   </style>
 </head>
 <body>
+  <header>⚡ Transformer Sizing & Efficiency Calculator</header>
+
   <div class="container">
-    <h2>🔋 Transformer Efficiency Calculator</h2>
-    <label for="output">Output Power (kW):</label>
-    <input type="number" id="output" placeholder="Enter output power">
+    <label for="load">Total Load (kW):</label>
+    <input type="number" id="load" placeholder="Enter total load">
 
-    <label for="loss">Total Losses (kW):</label>
-    <input type="number" id="loss" placeholder="Enter total losses">
+    <label for="pf">Power Factor (0–1):</label>
+    <input type="number" id="pf" placeholder="Enter power factor" value="0.85">
 
-    <button onclick="calculateEfficiency()">Calculate Efficiency</button>
+    <label for="efficiency">Transformer Efficiency (%):</label>
+    <input type="number" id="efficiency" placeholder="Enter efficiency" value="95">
+
+    <button onclick="calculateTransformer()">Calculate</button>
     <div class="result" id="result"></div>
 
-    <a href="index.html" class="back-link">⬅ Back to Home</a>
+    <a href="index.html" class="back-home">⬅ Back to Home</a>
   </div>
 
   <script>
-    function calculateEfficiency() {
-      const output = parseFloat(document.getElementById('output').value);
-      const loss = parseFloat(document.getElementById('loss').value);
+    function calculateTransformer() {
+      const load = parseFloat(document.getElementById('load').value);
+      const pf = parseFloat(document.getElementById('pf').value);
+      const efficiency = parseFloat(document.getElementById('efficiency').value) / 100;
 
-      if (isNaN(output) || isNaN(loss) || output <= 0 || loss < 0) {
+      if (isNaN(load) || isNaN(pf) || isNaN(efficiency) || load <= 0 || pf <= 0 || efficiency <= 0) {
         document.getElementById('result').innerText = "⚠️ Please enter valid numbers.";
         return;
       }
 
-      const input = output + loss;
-      const efficiency = (output / input) * 100;
-
-      document.getElementById('result').innerText = 
-        "Efficiency: " + efficiency.toFixed(2) + "%";
+      // Calculate kVA
+      const kva = load / (pf * efficiency);
+      document.getElementById('result').innerText = `Recommended Transformer Size: ${kva.toFixed(2)} kVA`;
     }
   </script>
 </body>
