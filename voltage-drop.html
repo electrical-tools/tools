@@ -5,75 +5,131 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Voltage Drop Calculator</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f9; color: #333; }
-    h1 { text-align: center; color: #0056b3; }
-    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input, select, button { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
-    button { background: #0056b3; color: white; font-weight: bold; cursor: pointer; margin-top: 20px; }
-    button:hover { background: #003d80; }
-    .result { margin-top: 20px; padding: 15px; background: #e9f7ef; border: 1px solid #28a745; border-radius: 5px; }
-    .back { margin-top: 20px; text-align: center; }
-    .back a { text-decoration: none; color: #0056b3; font-weight: bold; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f7fb;
+      color: #333;
+    }
+    header {
+      background: #1a237e;
+      color: white;
+      text-align: center;
+      padding: 30px 0;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    header p {
+      font-size: 16px;
+      font-weight: normal;
+      margin-top: 8px;
+    }
+    .tool-container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    h2 {
+      text-align: center;
+      color: #1a237e;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #3949ab;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #5c6bc0;
+    }
+    .result {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #1a237e;
+    }
+    footer {
+      background: #1a237e;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      margin-top: 50px;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Voltage Drop Calculator</h1>
-    
-    <label>Load Current (A):</label>
-    <input type="number" id="current" placeholder="Enter current in amperes">
 
-    <label>Cable Length (m):</label>
-    <input type="number" id="length" placeholder="Enter length in meters">
+<header>
+  ⚡ Electrical Tools
+  <p>Smart Calculators for Electrical Engineers & Students</p>
+</header>
 
-    <label>System Voltage (V):</label>
-    <input type="number" id="voltage" placeholder="Enter system voltage">
+<div class="tool-container">
+  <h2>Voltage Drop Calculator</h2>
+  
+  <label for="current">Load Current (A):</label>
+  <input type="number" id="current" placeholder="Enter current in Amps">
 
-    <label>Cable Material:</label>
-    <select id="material">
-      <option value="resistivity_cu">Copper</option>
-      <option value="resistivity_al">Aluminum</option>
-    </select>
+  <label for="length">Cable Length (m):</label>
+  <input type="number" id="length" placeholder="Enter length in meters">
 
-    <button onclick="calculateDrop()">Calculate</button>
+  <label for="resistance">Resistance (Ω/km):</label>
+  <input type="number" id="resistance" placeholder="Enter resistance value">
 
-    <div class="result" id="result"></div>
+  <label for="voltage">System Voltage (V):</label>
+  <input type="number" id="voltage" placeholder="Enter system voltage">
 
-    <div class="back"><a href="index.html">← Back to Home</a></div>
-  </div>
+  <button onclick="calculateVD()">Calculate</button>
 
-  <script>
-    function calculateDrop() {
-      let I = parseFloat(document.getElementById("current").value);
-      let L = parseFloat(document.getElementById("length").value);
-      let V = parseFloat(document.getElementById("voltage").value);
-      let material = document.getElementById("material").value;
+  <div class="result" id="result"></div>
+</div>
 
-      if (isNaN(I) || isNaN(L) || isNaN(V)) {
-        document.getElementById("result").innerHTML = "⚠️ Please enter valid values.";
-        return;
-      }
+<footer>
+  © 2025 Electrical Tools | Developed by Muhammad Fahid Khan
+</footer>
 
-      // Resistivity values in ohm·mm²/m
-      let resistivity_cu = 0.0175;  
-      let resistivity_al = 0.0282;  
+<script>
+function calculateVD() {
+  let current = parseFloat(document.getElementById('current').value);
+  let length = parseFloat(document.getElementById('length').value);
+  let resistance = parseFloat(document.getElementById('resistance').value);
+  let voltage = parseFloat(document.getElementById('voltage').value);
 
-      let rho = (material === "resistivity_cu") ? resistivity_cu : resistivity_al;
+  if (isNaN(current) || isNaN(length) || isNaN(resistance) || isNaN(voltage) || current <= 0 || length <= 0 || resistance <= 0 || voltage <= 0) {
+    document.getElementById('result').innerText = "⚠️ Please enter valid values!";
+    return;
+  }
 
-      // Assume cable size = 50 mm² (for example)
-      let area = 50;  
+  let vd = (current * length * resistance) / 1000;
+  let percent = (vd / voltage) * 100;
 
-      // Voltage drop calculation (single-phase approximation)
-      let Vdrop = (2 * I * rho * L) / area;
-      let percentDrop = (Vdrop / V) * 100;
-      let Vfinal = V - Vdrop;
+  document.getElementById('result').innerText = "Voltage Drop: " + vd.toFixed(2) + " V (" + percent.toFixed(2) + "%)";
+}
+</script>
 
-      document.getElementById("result").innerHTML = 
-        `<b>Voltage Drop:</b> ${Vdrop.toFixed(2)} V<br>
-         <b>Final Voltage:</b> ${Vfinal.toFixed(2)} V<br>
-         <b>Percentage Drop:</b> ${percentDrop.toFixed(2)} %`;
-    }
-  </script>
 </body>
 </html>
