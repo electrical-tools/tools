@@ -3,60 +3,130 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Capacitor Bank Sizing</title>
+  <title>Capacitor Bank Calculator</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f9; color: #333; }
-    h1 { text-align: center; color: #b36b00; }
-    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input, button { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
-    button { background: #b36b00; color: white; font-weight: bold; cursor: pointer; margin-top: 20px; }
-    button:hover { background: #804d00; }
-    .result { margin-top: 20px; padding: 15px; background: #fff4e6; border: 1px solid #b36b00; border-radius: 5px; }
-    .back { margin-top: 20px; text-align: center; }
-    .back a { text-decoration: none; color: #b36b00; font-weight: bold; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f7fb;
+      color: #333;
+    }
+    header {
+      background: #1a237e;
+      color: white;
+      text-align: center;
+      padding: 30px 0;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    header p {
+      font-size: 16px;
+      font-weight: normal;
+      margin-top: 8px;
+    }
+    .tool-container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    h2 {
+      text-align: center;
+      color: #1a237e;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: #3949ab;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #5c6bc0;
+    }
+    .result {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #1a237e;
+    }
+    footer {
+      background: #1a237e;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      margin-top: 50px;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Capacitor Bank Sizing</h1>
-    
-    <label>Active Power (kW):</label>
-    <input type="number" id="kw" placeholder="Enter load in kW">
 
-    <label>Existing Power Factor:</label>
-    <input type="number" id="pf1" step="0.01" placeholder="e.g. 0.7">
+<header>
+  ⚡ Electrical Tools
+  <p>Smart Calculators for Electrical Engineers & Students</p>
+</header>
 
-    <label>Desired Power Factor:</label>
-    <input type="number" id="pf2" step="0.01" placeholder="e.g. 0.95">
+<div class="tool-container">
+  <h2>Capacitor Bank Calculator</h2>
+  
+  <label for="kw">Load (kW):</label>
+  <input type="number" id="kw" placeholder="Enter load in kW">
 
-    <button onclick="calculateCapacitor()">Calculate</button>
+  <label for="pf1">Present Power Factor:</label>
+  <input type="number" id="pf1" step="0.01" placeholder="e.g. 0.75">
 
-    <div class="result" id="result"></div>
+  <label for="pf2">Desired Power Factor:</label>
+  <input type="number" id="pf2" step="0.01" placeholder="e.g. 0.95">
 
-    <div class="back"><a href="index.html">← Back to Home</a></div>
-  </div>
+  <button onclick="calculateCapacitor()">Calculate</button>
 
-  <script>
-    function calculateCapacitor() {
-      let kW = parseFloat(document.getElementById("kw").value);
-      let pf1 = parseFloat(document.getElementById("pf1").value);
-      let pf2 = parseFloat(document.getElementById("pf2").value);
+  <div class="result" id="result"></div>
+</div>
 
-      if (isNaN(kW) || isNaN(pf1) || isNaN(pf2)) {
-        document.getElementById("result").innerHTML = "⚠️ Please enter valid values.";
-        return;
-      }
+<footer>
+  © 2025 Electrical Tools | Developed by Muhammad Fahid Khan
+</footer>
 
-      let phi1 = Math.acos(pf1);
-      let phi2 = Math.acos(pf2);
+<script>
+function calculateCapacitor() {
+  let kw = parseFloat(document.getElementById('kw').value);
+  let pf1 = parseFloat(document.getElementById('pf1').value);
+  let pf2 = parseFloat(document.getElementById('pf2').value);
 
-      // Required kVAR = kW * (tan(phi1) - tan(phi2))
-      let kvar = kW * (Math.tan(phi1) - Math.tan(phi2));
+  if (isNaN(kw) || isNaN(pf1) || isNaN(pf2) || pf1 <= 0 || pf2 <= 0 || pf1 >= 1 || pf2 >= 1) {
+    document.getElementById('result').innerText = "⚠️ Please enter valid values!";
+    return;
+  }
 
-      document.getElementById("result").innerHTML = 
-        `<b>Required Capacitor Bank:</b> ${kvar.toFixed(2)} kVAR`;
-    }
-  </script>
+  let kva1 = kw / pf1;
+  let kva2 = kw / pf2;
+  let kvar = Math.sqrt(kva1*kva1 - kw*kw) - Math.sqrt(kva2*kva2 - kw*kw);
+
+  document.getElementById('result').innerText = "Required Capacitor Bank: " + kvar.toFixed(2) + " kVAr";
+}
+</script>
+
 </body>
 </html>
