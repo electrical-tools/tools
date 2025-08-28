@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capacitor Bank Sizing</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f9; color: #333; }
+    h1 { text-align: center; color: #b36b00; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, button { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
+    button { background: #b36b00; color: white; font-weight: bold; cursor: pointer; margin-top: 20px; }
+    button:hover { background: #804d00; }
+    .result { margin-top: 20px; padding: 15px; background: #fff4e6; border: 1px solid #b36b00; border-radius: 5px; }
+    .back { margin-top: 20px; text-align: center; }
+    .back a { text-decoration: none; color: #b36b00; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Capacitor Bank Sizing</h1>
+    
+    <label>Active Power (kW):</label>
+    <input type="number" id="kw" placeholder="Enter load in kW">
+
+    <label>Existing Power Factor:</label>
+    <input type="number" id="pf1" step="0.01" placeholder="e.g. 0.7">
+
+    <label>Desired Power Factor:</label>
+    <input type="number" id="pf2" step="0.01" placeholder="e.g. 0.95">
+
+    <button onclick="calculateCapacitor()">Calculate</button>
+
+    <div class="result" id="result"></div>
+
+    <div class="back"><a href="index.html">← Back to Home</a></div>
+  </div>
+
+  <script>
+    function calculateCapacitor() {
+      let kW = parseFloat(document.getElementById("kw").value);
+      let pf1 = parseFloat(document.getElementById("pf1").value);
+      let pf2 = parseFloat(document.getElementById("pf2").value);
+
+      if (isNaN(kW) || isNaN(pf1) || isNaN(pf2)) {
+        document.getElementById("result").innerHTML = "⚠️ Please enter valid values.";
+        return;
+      }
+
+      let phi1 = Math.acos(pf1);
+      let phi2 = Math.acos(pf2);
+
+      // Required kVAR = kW * (tan(phi1) - tan(phi2))
+      let kvar = kW * (Math.tan(phi1) - Math.tan(phi2));
+
+      document.getElementById("result").innerHTML = 
+        `<b>Required Capacitor Bank:</b> ${kvar.toFixed(2)} kVAR`;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voltage Drop Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f9; color: #333; }
+    h1 { text-align: center; color: #0056b3; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, select, button { width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
+    button { background: #0056b3; color: white; font-weight: bold; cursor: pointer; margin-top: 20px; }
+    button:hover { background: #003d80; }
+    .result { margin-top: 20px; padding: 15px; background: #e9f7ef; border: 1px solid #28a745; border-radius: 5px; }
+    .back { margin-top: 20px; text-align: center; }
+    .back a { text-decoration: none; color: #0056b3; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Voltage Drop Calculator</h1>
+    
+    <label>Load Current (A):</label>
+    <input type="number" id="current" placeholder="Enter current in amperes">
+
+    <label>Cable Length (m):</label>
+    <input type="number" id="length" placeholder="Enter length in meters">
+
+    <label>System Voltage (V):</label>
+    <input type="number" id="voltage" placeholder="Enter system voltage">
+
+    <label>Cable Material:</label>
+    <select id="material">
+      <option value="resistivity_cu">Copper</option>
+      <option value="resistivity_al">Aluminum</option>
+    </select>
+
+    <button onclick="calculateDrop()">Calculate</button>
+
+    <div class="result" id="result"></div>
+
+    <div class="back"><a href="index.html">← Back to Home</a></div>
+  </div>
+
+  <script>
+    function calculateDrop() {
+      let I = parseFloat(document.getElementById("current").value);
+      let L = parseFloat(document.getElementById("length").value);
+      let V = parseFloat(document.getElementById("voltage").value);
+      let material = document.getElementById("material").value;
+
+      if (isNaN(I) || isNaN(L) || isNaN(V)) {
+        document.getElementById("result").innerHTML = "⚠️ Please enter valid values.";
+        return;
+      }
+
+      // Resistivity values in ohm·mm²/m
+      let resistivity_cu = 0.0175;  
+      let resistivity_al = 0.0282;  
+
+      let rho = (material === "resistivity_cu") ? resistivity_cu : resistivity_al;
+
+      // Assume cable size = 50 mm² (for example)
+      let area = 50;  
+
+      // Voltage drop calculation (single-phase approximation)
+      let Vdrop = (2 * I * rho * L) / area;
+      let percentDrop = (Vdrop / V) * 100;
+      let Vfinal = V - Vdrop;
+
+      document.getElementById("result").innerHTML = 
+        `<b>Voltage Drop:</b> ${Vdrop.toFixed(2)} V<br>
+         <b>Final Voltage:</b> ${Vfinal.toFixed(2)} V<br>
+         <b>Percentage Drop:</b> ${percentDrop.toFixed(2)} %`;
+    }
+  </script>
+</body>
+</html>
