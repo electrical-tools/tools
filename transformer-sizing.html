@@ -3,132 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Voltage Drop Calculator | Electrical Tools</title>
+  <title>Transformer Efficiency Calculator</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f9;
       margin: 0;
       padding: 0;
-      background: #f4f7fb;
-      color: #333;
-    }
-    header {
-      background: #004d40;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     .container {
-      max-width: 700px;
-      margin: 40px auto;
       background: white;
       padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      width: 380px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #2c3e50;
     }
     label {
       display: block;
       margin: 12px 0 5px;
       font-weight: bold;
+      text-align: left;
     }
-    input, select {
+    input {
       width: 100%;
       padding: 10px;
       margin-bottom: 15px;
       border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
+      border-radius: 8px;
     }
     button {
-      background: #00695c;
+      background: #3498db;
       color: white;
-      padding: 12px;
       border: none;
+      padding: 12px 18px;
       border-radius: 8px;
-      font-size: 18px;
       cursor: pointer;
+      font-size: 16px;
       width: 100%;
     }
     button:hover {
-      background: #00897b;
+      background: #2980b9;
     }
-    #result {
+    .result {
       margin-top: 20px;
       font-size: 18px;
       font-weight: bold;
-      color: #004d40;
-      text-align: center;
+      color: #16a085;
     }
-    footer {
-      background: #004d40;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      margin-top: 30px;
-    }
-    .back-home {
-      display: block;
+    .back-link {
+      display: inline-block;
       margin-top: 20px;
-      text-align: center;
-    }
-    .back-home a {
-      color: #00695c;
       text-decoration: none;
-      font-weight: bold;
+      color: #555;
+    }
+    .back-link:hover {
+      color: #000;
     }
   </style>
 </head>
 <body>
-  <header>⚡ Voltage Drop Calculator</header>
-
   <div class="container">
-    <label for="current">Load Current (A):</label>
-    <input type="number" id="current" placeholder="Enter current in amps">
+    <h2>🔋 Transformer Efficiency Calculator</h2>
+    <label for="output">Output Power (kW):</label>
+    <input type="number" id="output" placeholder="Enter output power">
 
-    <label for="length">Cable Length (m):</label>
-    <input type="number" id="length" placeholder="Enter cable length in meters">
+    <label for="loss">Total Losses (kW):</label>
+    <input type="number" id="loss" placeholder="Enter total losses">
 
-    <label for="voltage">System Voltage (V):</label>
-    <input type="number" id="voltage" placeholder="Enter supply voltage">
+    <button onclick="calculateEfficiency()">Calculate Efficiency</button>
+    <div class="result" id="result"></div>
 
-    <label for="material">Conductor Material:</label>
-    <select id="material">
-      <option value="copper">Copper</option>
-      <option value="aluminum">Aluminum</option>
-    </select>
-
-    <label for="size">Cable Size (mm²):</label>
-    <input type="number" id="size" placeholder="Enter cable size in mm²">
-
-    <button onclick="calculateDrop()">Calculate Voltage Drop</button>
-    <div id="result"></div>
-
-    <div class="back-home">
-      <a href="index.html">← Back to Home</a>
-    </div>
+    <a href="index.html" class="back-link">⬅ Back to Home</a>
   </div>
 
-  <footer>© 2025 Electrical Tools | Developed by Muhammad Fahid Khan</footer>
-
   <script>
-    function calculateDrop() {
-      const current = parseFloat(document.getElementById('current').value);
-      const length = parseFloat(document.getElementById('length').value);
-      const voltage = parseFloat(document.getElementById('voltage').value);
-      const material = document.getElementById('material').value;
-      const size = parseFloat(document.getElementById('size').value);
+    function calculateEfficiency() {
+      const output = parseFloat(document.getElementById('output').value);
+      const loss = parseFloat(document.getElementById('loss').value);
 
-      if (isNaN(current) || isNaN(length) || isNaN(voltage) || isNaN(size)) {
+      if (isNaN(output) || isNaN(loss) || output <= 0 || loss < 0) {
         document.getElementById('result').innerText = "⚠️ Please enter valid numbers.";
         return;
       }
 
-      // Resistivity (Ohm meter)
-      let resistivity = material === "copper" ? 1.68e-8 : 2.82e-8;
+      const input = output + loss;
+      const efficiency = (output / input) * 100;
 
-      // Resistance of cable
-      let resistance = (resistivity * length * 2) / (size * 1e-6); // Ohms
-
-      // Voltage drop
+      document.getElementById('result').innerText = 
+        "Efficiency: " + efficiency.toFixed(2) + "%";
+    }
+  </script>
+</body>
+</html>
